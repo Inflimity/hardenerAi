@@ -1,26 +1,152 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0A0A0F;
+  --foreground: #FAFAFA;
+  --muted: #A1A1AA;
+  --surface: #12121A;
+  --surface-hover: #1A1A24;
+  --border-color: rgba(57, 255, 20, 0.08);
+  --border-hover: rgba(57, 255, 20, 0.2);
+  --secure: #39FF14;
+  --secure-dim: #2bcc10;
+  --vulnerable: #F59E0B;
+  --vulnerable-dim: #d97706;
+  --glass-bg: rgba(18, 18, 26, 0.8);
+  --glass-border: rgba(57, 255, 20, 0.08);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-secure: var(--secure);
+  --color-secure-dim: var(--secure-dim);
+  --color-vulnerable: var(--vulnerable);
+  --color-vulnerable-dim: var(--vulnerable-dim);
+  --color-glass-bg: var(--glass-bg);
+  --color-border-subtle: var(--border-color);
+  --color-border-hover: var(--border-hover);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
+
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-scan-line: scan-line 3s linear infinite;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-slide-up: slide-up 0.6s ease-out forwards;
+  --animate-terminal-blink: terminal-blink 1s step-end infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-typewriter: typewriter 4s steps(50) 1s forwards;
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  @keyframes scan-line {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes terminal-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(57, 255, 20, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(57, 255, 20, 0.4);
+}
+
+/* Selection color */
+::selection {
+  background: rgba(57, 255, 20, 0.25);
+  color: #FAFAFA;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: rgba(18, 18, 26, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(57, 255, 20, 0.12);
+}
+
+/* Text glow effect */
+.text-glow {
+  text-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+}
+
+.text-glow-strong {
+  text-shadow: 0 0 30px rgba(57, 255, 20, 0.5), 0 0 60px rgba(57, 255, 20, 0.2);
+}
+
+/* Neon border glow */
+.border-glow {
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.1), inset 0 0 15px rgba(57, 255, 20, 0.05);
+}
+
+/* Stagger animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
