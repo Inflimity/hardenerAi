@@ -1,59 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "Hardener AI — Autonomous Security for AI-Built Apps",
-  description:
-    "Did AI build your app? Let AI secure it before hackers do. A 96% success rate autonomous pentesting engine wrapped in a beautiful interface for founders who value their data.",
-  keywords: [
-    "AI security",
-    "penetration testing",
-    "vulnerability scanner",
-    "cybersecurity",
-    "vibe coding",
-    "Shannon engine",
-    "automated pentesting",
-  ],
-  openGraph: {
-    title: "Hardener AI — Autonomous Security for AI-Built Apps",
-    description:
-      "A 96% success rate autonomous pentesting engine wrapped in a beautiful interface for founders who value their data.",
-    type: "website",
-    siteName: "Hardener AI",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hardener AI — Autonomous Security for AI-Built Apps",
-    description:
-      "A 96% success rate autonomous pentesting engine wrapped in a beautiful interface for founders who value their data.",
-  },
+    title: "Hardener AI | Autonomous Security for Vibe Coders",
+    description: "Clean architecture for the AI era. We use autonomous agents to audit, verify, and harden your generated code against production-grade threats.",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className="dark">
-      <body
-        className={`${inter.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+            <body className="bg-[#020617] text-slate-200 selection:bg-emerald-500/30" style={{ fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+                {children}
+            </body>
+        </html>
+    );
 }
