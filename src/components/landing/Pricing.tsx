@@ -1,156 +1,94 @@
-import { Check, Zap, Shield, Building2 } from "lucide-react";
-
-const plans = [
-    {
-        name: "Single Pulse",
-        price: "$49",
-        period: "one-time",
-        description: "One-time scan for an MVP launch.",
-        icon: Zap,
-        popular: false,
-        features: [
-            "1 Surface Scan + Deep Audit",
-            "Full Kill Chain Report",
-            "Executive Summary",
-            "Code Patches (JS, PHP, C#)",
-            "Leaked API Key Detection",
-            "PDF Export",
-        ],
-    },
-    {
-        name: "Growth Shield",
-        price: "$199",
-        period: "/month",
-        description: "2 Deep Scans per month + 'Verified' footer badge.",
-        icon: Shield,
-        popular: true,
-        features: [
-            "2 Deep Scans per month",
-            "Everything in Single Pulse",
-            "Continuous Monitoring",
-            "\"Verified Secure\" Badge",
-            "Priority Scan Queue",
-            "Slack/Discord Alerts",
-            "Dedicated Support",
-        ],
-    },
-    {
-        name: "Enterprise Triage",
-        price: "$999",
-        period: "+",
-        description: "Custom human-in-the-loop verification.",
-        icon: Building2,
-        popular: false,
-        features: [
-            "Unlimited Deep Scans",
-            "Everything in Growth Shield",
-            "Human-in-the-Loop Review",
-            "Custom Pentest Scope",
-            "Compliance Reporting",
-            "SLA Guarantee",
-            "Dedicated Security Engineer",
-            "Private Deployment Option",
-        ],
-    },
-];
-
 export default function Pricing() {
-    return (
-        <section id="pricing" className="relative py-24 lg:py-32">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                {/* Section header */}
-                <div className="text-center max-w-2xl mx-auto mb-16">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-secure/10 border border-secure/20 px-4 py-1.5 mb-6">
-                        <span className="text-xs font-medium text-secure">Pricing</span>
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
-                        Invest in Security,{" "}
-                        <span className="text-secure text-glow">Not Regret</span>
-                    </h2>
-                    <p className="text-muted text-lg leading-relaxed">
-                        Credit-based pricing that scales with your needs. No hidden fees,
-                        cancel anytime.
-                    </p>
-                </div>
+    const tiers = [
+        {
+            name: "Pulse Check",
+            price: "$0",
+            period: "/scan",
+            features: ["Surface Scan", "Tech Stack Analysis", "Header Audit", "Basic Report"],
+            cta: "Start Free",
+            highlight: false,
+            dotSize: "w-1 h-1",
+            textColor: "text-slate-400",
+        },
+        {
+            name: "Deep Audit",
+            price: "$49",
+            period: "/scan",
+            features: ["Shannon Autonomous Scan", "Exploit Proof Logs", "Code Fix Snippets", "Priority Queue", "PDF for Investors"],
+            cta: "Run Audit",
+            highlight: true,
+            dotSize: "w-1.5 h-1.5",
+            textColor: "text-slate-200",
+        },
+        {
+            name: "Enterprise",
+            price: "$299",
+            period: "/mo",
+            features: ["Monthly Deep Audits", "Managed PR Submission", "Security Badge", "Vulnerability Monitor"],
+            cta: "Contact Sales",
+            highlight: false,
+            dotSize: "w-1 h-1",
+            textColor: "text-slate-400",
+        },
+    ];
 
-                {/* Pricing cards */}
-                <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-                    {plans.map((plan) => {
-                        const Icon = plan.icon;
-                        return (
-                            <div
-                                key={plan.name}
-                                className={`relative glass rounded-xl p-6 lg:p-8 flex flex-col transition-all duration-300 hover:bg-surface-hover ${plan.popular
-                                        ? "border-secure/30 border-glow md:scale-105"
-                                        : ""
+    return (
+        <section id="pricing" className="py-24 bg-[#01040f]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 className="text-4xl font-bold text-white mb-6">Pricing</h2>
+                <p className="text-slate-500 mb-20 uppercase tracking-widest text-xs font-bold">
+                    Global Scale. Simple Rates.
+                </p>
+
+                <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                    {tiers.map((tier) => (
+                        <div
+                            key={tier.name}
+                            className={`p-10 rounded-xl text-left flex flex-col relative ${tier.highlight
+                                    ? "bg-slate-900 border-2 border-emerald-600 shadow-2xl"
+                                    : "bg-slate-900/50 border border-slate-800"
+                                }`}
+                        >
+                            {tier.highlight && (
+                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 px-3 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">
+                                    Popular
+                                </div>
+                            )}
+                            <h3
+                                className={`text-sm font-bold uppercase tracking-widest mb-4 ${tier.highlight ? "text-emerald-500" : "text-slate-400"
                                     }`}
                             >
-                                {/* Popular badge */}
-                                {plan.popular && (
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                                        <span className="inline-flex items-center rounded-full bg-secure px-3 py-1 text-xs font-bold text-background">
-                                            Most Popular
-                                        </span>
-                                    </div>
-                                )}
-
-                                {/* Icon & Name */}
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div
-                                        className={`flex h-10 w-10 items-center justify-center rounded-lg ${plan.popular
-                                                ? "bg-secure/20 border border-secure/30"
-                                                : "bg-surface border border-border-subtle"
-                                            }`}
+                                {tier.name}
+                            </h3>
+                            <p className="text-4xl font-bold text-white mb-8">
+                                {tier.price}
+                                <span className="text-xs font-normal text-slate-500 ml-1 tracking-normal">
+                                    {tier.period}
+                                </span>
+                            </p>
+                            <ul className="space-y-4 mb-10 flex-grow">
+                                {tier.features.map((item) => (
+                                    <li
+                                        key={item}
+                                        className={`flex items-center gap-3 text-sm ${tier.textColor}`}
                                     >
-                                        <Icon
-                                            className={`h-5 w-5 ${plan.popular ? "text-secure" : "text-muted"
-                                                }`}
+                                        <div
+                                            className={`${tier.dotSize} rounded-full bg-emerald-500`}
                                         />
-                                    </div>
-                                    <h3 className="text-lg font-semibold">{plan.name}</h3>
-                                </div>
-
-                                {/* Price */}
-                                <div className="mb-2">
-                                    <span className="text-4xl font-bold text-foreground">
-                                        {plan.price}
-                                    </span>
-                                    <span className="text-sm text-muted ml-1">
-                                        {plan.period}
-                                    </span>
-                                </div>
-                                <p className="text-sm text-muted mb-6">{plan.description}</p>
-
-                                {/* CTA */}
-                                <button
-                                    className={`w-full h-11 rounded-lg font-semibold text-sm transition-all duration-200 active:scale-95 mb-6 ${plan.popular
-                                            ? "bg-secure text-background hover:bg-secure-dim"
-                                            : "bg-surface border border-border-subtle text-foreground hover:border-secure/30 hover:bg-surface-hover"
-                                        }`}
-                                >
-                                    {plan.name === "Enterprise Triage"
-                                        ? "Contact Sales"
-                                        : "Get Started"}
-                                </button>
-
-                                {/* Features */}
-                                <ul className="space-y-3 flex-1">
-                                    {plan.features.map((feature) => (
-                                        <li
-                                            key={feature}
-                                            className="flex items-start gap-2.5 text-sm"
-                                        >
-                                            <Check
-                                                className={`h-4 w-4 mt-0.5 flex-shrink-0 ${plan.popular ? "text-secure" : "text-muted"
-                                                    }`}
-                                            />
-                                            <span className="text-muted">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        );
-                    })}
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                            <button
+                                className={`w-full py-3 rounded-lg font-bold transition-all ${tier.highlight
+                                        ? "bg-emerald-600 hover:bg-emerald-500 text-white py-4"
+                                        : "bg-slate-800 hover:bg-slate-700 text-white"
+                                    }`}
+                            >
+                                {tier.cta}
+                            </button>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

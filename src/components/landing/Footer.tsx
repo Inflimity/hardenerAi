@@ -1,107 +1,52 @@
-import { Shield, Github, Twitter, Linkedin } from "lucide-react";
-
-const footerLinks = {
-    Product: [
-        { label: "Features", href: "#features" },
-        { label: "Pricing", href: "#pricing" },
-        { label: "How It Works", href: "#how-it-works" },
-        { label: "Documentation", href: "#" },
-    ],
-    Company: [
-        { label: "About", href: "#" },
-        { label: "Blog", href: "#" },
-        { label: "Careers", href: "#" },
-        { label: "Contact", href: "#" },
-    ],
-    Legal: [
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms of Service", href: "#" },
-        { label: "Responsible Disclosure", href: "#" },
-    ],
-};
-
-const socialLinks = [
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-];
+import { ShieldCheck, Github, Lock } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="border-t border-border-subtle bg-surface/20">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
-                    {/* Brand */}
-                    <div className="col-span-2">
-                        <a href="#" className="flex items-center gap-2 mb-4">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secure/10 border border-secure/20">
-                                <Shield className="h-4 w-4 text-secure" />
-                            </div>
-                            <span className="text-lg font-bold tracking-tight">
-                                Hardener<span className="text-secure">AI</span>
+        <footer className="py-24 border-t border-slate-900">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-12">
+                    <div className="flex flex-col items-center md:items-start">
+                        <div className="flex items-center gap-2 mb-4">
+                            <ShieldCheck className="w-6 h-6 text-emerald-500" />
+                            <span className="text-xl font-bold text-white tracking-tight">
+                                HardenerAI
                             </span>
-                        </a>
-                        <p className="text-sm text-muted leading-relaxed max-w-xs mb-6">
-                            Autonomous security scanning powered by the Shannon engine.
-                            Built for founders who ship fast and value their users&apos; data.
-                        </p>
-
-                        {/* Social links */}
-                        <div className="flex items-center gap-3">
-                            {socialLinks.map((social) => {
-                                const Icon = social.icon;
-                                return (
-                                    <a
-                                        key={social.label}
-                                        href={social.href}
-                                        aria-label={social.label}
-                                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle text-muted transition-all duration-200 hover:text-foreground hover:border-secure/30 hover:bg-secure/5"
-                                    >
-                                        <Icon className="h-4 w-4" />
-                                    </a>
-                                );
-                            })}
                         </div>
+                        <p className="text-slate-500 text-sm max-w-xs text-center md:text-left leading-relaxed">
+                            Autonomous security audits for the modern software era. Based on
+                            Shannon AI benchmarks.
+                        </p>
                     </div>
 
-                    {/* Link columns */}
-                    {Object.entries(footerLinks).map(([title, links]) => (
-                        <div key={title}>
-                            <h4 className="text-sm font-semibold text-foreground mb-4">
-                                {title}
-                            </h4>
-                            <ul className="space-y-2.5">
-                                {links.map((link) => (
-                                    <li key={link.label}>
-                                        <a
-                                            href={link.href}
-                                            className="text-sm text-muted transition-colors duration-200 hover:text-foreground"
-                                        >
-                                            {link.label}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Bottom bar */}
-                <div className="mt-12 pt-8 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-xs text-muted">
-                        &copy; {new Date().getFullYear()} Hardener AI. All rights reserved.
-                    </p>
-                    <p className="text-xs text-muted">
-                        Powered by{" "}
-                        <a
-                            href="https://github.com/KeygraphHQ/shannon"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-secure/70 hover:text-secure transition-colors"
-                        >
-                            Shannon Engine
+                    <div className="flex gap-12 text-xs text-slate-500 font-bold uppercase tracking-widest">
+                        <a href="#" className="hover:text-white transition-colors">
+                            Privacy
                         </a>
-                    </p>
+                        <a href="#" className="hover:text-white transition-colors">
+                            Terms
+                        </a>
+                        <a href="#" className="hover:text-white transition-colors">
+                            Security
+                        </a>
+                    </div>
+
+                    <div className="flex gap-3">
+                        <a
+                            href="#"
+                            className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-500 hover:text-white transition-all"
+                        >
+                            <Github className="w-5 h-5" />
+                        </a>
+                        <a
+                            href="#"
+                            className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-500 hover:text-white transition-all"
+                        >
+                            <Lock className="w-5 h-5" />
+                        </a>
+                    </div>
+                </div>
+                <div className="mt-16 text-center text-slate-700 text-[10px] uppercase tracking-[0.3em] font-bold">
+                    &copy; 2026 Hardener AI // Developed Globally.
                 </div>
             </div>
         </footer>

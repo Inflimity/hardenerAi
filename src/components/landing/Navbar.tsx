@@ -1,82 +1,73 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, Menu, X } from "lucide-react";
+import { ShieldCheck, Menu, X } from "lucide-react";
 
 const navLinks = [
-    { label: "Features", href: "#features" },
-    { label: "How It Works", href: "#how-it-works" },
+    { label: "How it Works", href: "#how" },
     { label: "Pricing", href: "#pricing" },
+    { label: "Safety Standard", href: "#security" },
 ];
 
 export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
-                    <a href="#" className="flex items-center gap-2 group">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secure/10 border border-secure/20 transition-all duration-300 group-hover:bg-secure/20 group-hover:border-secure/40">
-                            <Shield className="h-5 w-5 text-secure" />
+        <nav className="fixed top-0 w-full z-50 bg-[#020617] border-b border-slate-800">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16 items-center">
+                    <a href="#" className="flex items-center gap-2">
+                        <div className="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                            <ShieldCheck className="w-6 h-6 text-emerald-500" />
                         </div>
-                        <span className="text-lg font-bold tracking-tight text-foreground">
-                            Hardener<span className="text-secure">AI</span>
+                        <span className="text-xl font-bold tracking-tight text-white">
+                            Hardener<span className="text-emerald-500">AI</span>
                         </span>
                     </a>
 
-                    {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
-                                className="text-sm font-medium text-muted transition-colors duration-200 hover:text-foreground"
+                                className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
                             >
                                 {link.label}
                             </a>
                         ))}
-                        <a
-                            href="#hero"
-                            className="inline-flex h-9 items-center justify-center rounded-lg bg-secure px-4 text-sm font-semibold text-background transition-all duration-200 hover:bg-secure-dim active:scale-95"
-                        >
-                            Start Free Scan
-                        </a>
+                        <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-all">
+                            Get Started
+                        </button>
                     </div>
 
-                    {/* Mobile Toggle */}
                     <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle text-muted transition-colors hover:text-foreground hover:border-border-hover"
-                        aria-label="Toggle menu"
+                        className="md:hidden text-slate-400"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
-                        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        {isMenuOpen ? <X /> : <Menu />}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            {isOpen && (
-                <div className="md:hidden glass-strong border-t border-border-subtle animate-slide-up">
+            {isMenuOpen && (
+                <div className="md:hidden bg-[#020617] border-t border-slate-800">
                     <div className="px-4 py-4 space-y-3">
                         {navLinks.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
-                                onClick={() => setIsOpen(false)}
-                                className="block text-sm font-medium text-muted transition-colors hover:text-foreground py-2"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="block text-sm font-medium text-slate-400 hover:text-white transition-colors py-2"
                             >
                                 {link.label}
                             </a>
                         ))}
-                        <a
-                            href="#hero"
-                            onClick={() => setIsOpen(false)}
-                            className="block w-full text-center rounded-lg bg-secure px-4 py-2.5 text-sm font-semibold text-background transition-all duration-200 hover:bg-secure-dim"
+                        <button
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block w-full bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all text-center"
                         >
-                            Start Free Scan
-                        </a>
+                            Get Started
+                        </button>
                     </div>
                 </div>
             )}
