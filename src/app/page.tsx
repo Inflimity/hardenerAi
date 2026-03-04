@@ -218,6 +218,69 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* Tech Stack Banner */}
+            <section className="py-10 border-b border-t border-slate-900 bg-[#01030a]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-8">Securing Modern Architectures</p>
+                    <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                        <div className="flex items-center gap-2 text-white font-bold"><div className="w-3 h-3 bg-blue-500 rounded-full"></div> React</div>
+                        <div className="flex items-center gap-2 text-white font-bold"><div className="w-3 h-3 bg-green-500 rounded-full"></div> Node.js</div>
+                        <div className="flex items-center gap-2 text-white font-bold"><div className="w-3 h-3 bg-yellow-400 rounded-full"></div> Python</div>
+                        <div className="flex items-center gap-2 text-white font-bold"><div className="w-3 h-3 bg-cyan-400 rounded-full"></div> Go</div>
+                        <div className="flex items-center gap-2 text-white font-bold"><div className="w-3 h-3 bg-orange-500 rounded-full"></div> Rust</div>
+                        <div className="flex items-center gap-2 text-white font-bold"><div className="w-3 h-3 bg-blue-600 rounded-full"></div> Postgres</div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Workflow Section */}
+            <section className="py-24 bg-[#020617]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-20">
+                        <h2 className="text-3xl font-bold text-white mb-4">Seamless Integration. Immediate Results.</h2>
+                        <p className="text-slate-500 uppercase tracking-widest text-xs font-bold">How Hardener Plus Works</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-12 relative">
+                        {/* Connecting Line */}
+                        <div className="hidden md:block absolute top-12 left-[16.66%] right-[16.66%] h-0.5 bg-gradient-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0"></div>
+
+                        {/* Step 1 */}
+                        <div className="relative text-center">
+                            <div className="w-24 h-24 mx-auto bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mb-6 relative z-10 transition-transform hover:scale-105 duration-300">
+                                <span className="text-2xl font-bold text-emerald-500">01</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-3">Connect & Scan</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">
+                                Link your repository or provide a staging URL. Our engine maps your architecture dynamically.
+                            </p>
+                        </div>
+
+                        {/* Step 2 */}
+                        <div className="relative text-center">
+                            <div className="w-24 h-24 mx-auto bg-slate-900 border border-emerald-500/30 rounded-full flex items-center justify-center mb-6 relative z-10 shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-transform hover:scale-105 duration-300">
+                                <span className="text-2xl font-bold text-emerald-500">02</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-3">Analyze & Identify</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">
+                                We run proprietary heuristics to detect business-logic flaws and injection vulnerabilities.
+                            </p>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="relative text-center">
+                            <div className="w-24 h-24 mx-auto bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mb-6 relative z-10 transition-transform hover:scale-105 duration-300">
+                                <span className="text-2xl font-bold text-emerald-500">03</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-3">Automated Patching</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">
+                                Review and merge auto-generated PRs containing exact fixes for your specific framework.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Features Grid */}
             <section id="how" className="py-24 bg-[#01040f] border-y border-slate-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -513,6 +576,46 @@ export default function Home() {
                             <button className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-bold transition-all">
                                 Contact Sales
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="py-24 bg-[#020617] border-t border-slate-900">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                        <p className="text-slate-500 uppercase tracking-widest text-xs font-bold">Clear answers</p>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-colors">
+                            <h4 className="text-lg font-bold text-white mb-3 flex items-center justify-between">
+                                Does Hardener Plus require source code access?
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><polyline points="6 9 12 15 18 9" /></svg>
+                            </h4>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                For our Deep Audit, source access is recommended to provide precise code fixes. However, our Pulse Check can run purely on surface architecture without repository access.
+                            </p>
+                        </div>
+                        <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-colors">
+                            <h4 className="text-lg font-bold text-white mb-3 flex items-center justify-between">
+                                How is this different from generic static analysis?
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><polyline points="6 9 12 15 18 9" /></svg>
+                            </h4>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Traditional SAST tools generate massive amounts of noise and false positives. Hardener Plus uses dynamic profiling tailored to modern frameworks to detect complex logical bypasses that rules-based engines miss, prioritizing business impact.
+                            </p>
+                        </div>
+                        <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-colors">
+                            <h4 className="text-lg font-bold text-white mb-3 flex items-center justify-between">
+                                Can I integrate it into my CI/CD pipeline?
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><polyline points="6 9 12 15 18 9" /></svg>
+                            </h4>
+                            <p className="text-slate-400 text-sm leading-relaxed">
+                                Yes. The Enterprise tier includes GitHub/GitLab actions that automatically scan pull requests and block deployments if critical vulnerabilities are detected.
+                            </p>
                         </div>
                     </div>
                 </div>
