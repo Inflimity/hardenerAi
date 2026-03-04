@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Hardener AI | Autonomous Security for Vibe Coders",
-    description: "Clean architecture for the AI era. We use autonomous agents to audit, verify, and harden your generated code against production-grade threats.",
+    title: "Hardener Plus | Advanced Security for Modern Developers",
+    description: "Clean architecture for the modern era. We use advanced static analysis and dynamic profiling to audit, verify, and harden your codebase against production-grade threats.",
 };
 
 export default function RootLayout({

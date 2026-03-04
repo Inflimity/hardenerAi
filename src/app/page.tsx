@@ -63,7 +63,7 @@ export default function Home() {
                                 </svg>
                             </div>
                             <span className="text-xl font-bold tracking-tight text-white">
-                                Hardener<span className="text-emerald-500">AI</span>
+                                Hardener<span className="text-emerald-500">Plus</span>
                             </span>
                         </div>
 
@@ -123,17 +123,17 @@ export default function Home() {
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-900 border border-slate-800 mb-8">
                         <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
                         <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-                            Trusted by Global Vibe Coders
+                            Trusted by Global Developers
                         </span>
                     </div>
 
                     <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
-                        Did AI build your app?<br />
-                        <span className="text-emerald-500">Let AI Secure It.</span>
+                        Modern App Development<br />
+                        <span className="text-emerald-500">Requires Modern Security.</span>
                     </h1>
 
                     <p className="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-                        Clean architecture for the AI era. We use autonomous agents to audit, verify, and harden your generated code against production-grade threats.
+                        Clean architecture for the modern era. We use advanced static analysis and dynamic profiling to audit, verify, and harden your codebase against production-grade threats.
                     </p>
 
                     {/* Scanner Input Area */}
@@ -243,9 +243,9 @@ export default function Home() {
                                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-bold text-white mb-4">Shannon Engine</h3>
+                            <h3 className="text-lg font-bold text-white mb-4">Hardener Plus Engine</h3>
                             <p className="text-slate-400 leading-relaxed text-sm">
-                                Utilizes autonomous agent logic to identify logical bypasses that static analysis tools miss.
+                                Utilizes advanced heuristics and dynamic profiling to identify sophisticated logical bypasses.
                             </p>
                         </div>
 
@@ -473,7 +473,7 @@ export default function Home() {
                             </p>
                             <ul className="space-y-4 mb-10 flex-grow">
                                 <li className="flex items-center gap-3 text-sm text-slate-200">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Shannon Autonomous Scan
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Hardener Plus Advanced Scan
                                 </li>
                                 <li className="flex items-center gap-3 text-sm text-slate-200">
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Exploit Proof Logs
@@ -540,10 +540,10 @@ export default function Home() {
                                         <path d="m9 12 2 2 4-4" />
                                     </svg>
                                 </div>
-                                <span className="text-xl font-bold text-white tracking-tight">HardenerAI</span>
+                                <span className="text-xl font-bold text-white tracking-tight">Hardener Plus</span>
                             </div>
                             <p className="text-slate-500 text-sm max-w-xs text-center md:text-left leading-relaxed font-medium">
-                                Autonomous security audits for the modern software era. Based on Shannon AI benchmarks.
+                                Advanced security audits for the modern software era. Based on industry-leading security benchmarks.
                             </p>
                         </div>
 
@@ -601,7 +601,7 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="mt-16 text-center text-slate-700 text-[10px] uppercase tracking-[0.3em] font-bold">
-                        &copy; 2026 Hardener AI // Developed Globally.
+                        &copy; 2026 Hardener Plus // Developed Globally.
                     </div>
                 </div>
             </footer>
