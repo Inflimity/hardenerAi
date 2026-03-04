@@ -77,9 +77,12 @@ export default function Home() {
                             <a href="#security" className="text-slate-400 hover:text-white transition-colors">
                                 Safety Standard
                             </a>
-                            <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition-all">
+                            <a href="/login" className="text-slate-400 font-bold hover:text-white transition-colors">
+                                Log In
+                            </a>
+                            <a href="/signup" className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition-all">
                                 Get Started
-                            </button>
+                            </a>
                         </div>
 
                         <button className="md:hidden text-slate-400" id="menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -108,12 +111,12 @@ export default function Home() {
                     <a href="#how" className="block text-slate-400 hover:text-white transition-colors">
                         How it Works
                     </a>
-                    <a href="#pricing" className="block text-slate-400 hover:text-white transition-colors">
-                        Pricing
+                    <a href="/login" className="block text-slate-400 font-bold hover:text-white transition-colors">
+                        Log In
                     </a>
-                    <button className="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold">
+                    <a href="/signup" className="w-full bg-emerald-600 text-center block text-white py-2 rounded-lg font-semibold">
                         Get Started
-                    </button>
+                    </a>
                 </div>
             </nav>
 
@@ -520,9 +523,9 @@ export default function Home() {
                                     <div className="w-1 h-1 rounded-full bg-emerald-500"></div> Basic Report
                                 </li>
                             </ul>
-                            <button className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-bold transition-all">
+                            <a href="/signup?plan=free" className="w-full block text-center bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-bold transition-all">
                                 Start Free
-                            </button>
+                            </a>
                         </div>
 
                         {/* Pro Tier */}
@@ -548,9 +551,9 @@ export default function Home() {
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Priority Queue
                                 </li>
                             </ul>
-                            <button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-lg font-bold transition-all">
+                            <a href="/signup?plan=pro" className="w-full block text-center bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-lg font-bold transition-all">
                                 Run Audit
-                            </button>
+                            </a>
                         </div>
 
                         {/* Managed Tier */}
@@ -573,9 +576,9 @@ export default function Home() {
                                     <div className="w-1 h-1 rounded-full bg-emerald-500"></div> Vulnerability Monitor
                                 </li>
                             </ul>
-                            <button className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-bold transition-all">
+                            <a href="mailto:sales@hardener.ai" className="w-full block text-center bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-bold transition-all">
                                 Contact Sales
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
