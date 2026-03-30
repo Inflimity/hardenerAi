@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="file:///Users/seyimusibau/.gemini/antigravity/brain/6e8866d4-ed98-4139-a8e9-70218b96a639/hardener_plus_banner_1774913605276.png" width="100%" alt="Hardener Plus Banner">
+  <img src="public/hardener_plus_banner.png" width="100%" alt="Hardener Plus Banner">
   
   <h1>🛡️ Hardener Plus</h1>
   
