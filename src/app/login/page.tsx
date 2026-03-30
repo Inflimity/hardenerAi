@@ -2,15 +2,34 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const supabase = createClient();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Placeholder for future DB auth
-        console.log("Logging in with", email);
+        setError(null);
+        setIsLoading(true);
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (signInError) {
+            setError(signInError.message);
+            setIsLoading(false);
+            return;
+        }
+
+        router.push("/admin");
     };
 
     return (
@@ -37,6 +56,11 @@ export default function LoginPage() {
                     </div>
 
                     <form onSubmit={handleLogin} className="space-y-4">
+                        {error && (
+                            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-500">
+                                {error}
+                            </div>
+                        )}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1" htmlFor="email">
                                 Email Address
@@ -74,9 +98,10 @@ export default function LoginPage() {
 
                         <button
                             type="submit"
-                            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-lg transition-all mt-6 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                            disabled={isLoading}
+                            className={`w-full bg-emerald-600 text-white font-bold py-3.5 rounded-lg transition-all mt-6 shadow-[0_0_20px_rgba(16,185,129,0.2)] ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-emerald-500 hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]'}`}
                         >
-                            Sign In
+                            {isLoading ? "Signing In..." : "Sign In"}
                         </button>
                     </form>
 

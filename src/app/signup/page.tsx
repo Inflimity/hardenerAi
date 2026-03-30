@@ -2,16 +2,43 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const supabase = createClient();
 
-    const handleSignup = (e: React.FormEvent) => {
+    const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Placeholder for future DB auth
-        console.log("Signing up user", name, email);
+        setError(null);
+        setIsLoading(true);
+
+        const { data, error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: name,
+                },
+                // Replace this with your actual production URL later
+                emailRedirectTo: `${location.origin}/auth/callback`,
+            },
+        });
+
+        if (signUpError) {
+            setError(signUpError.message);
+            setIsLoading(false);
+            return;
+        }
+
+        // Redirect to admin dashboard on success
+        router.push("/admin");
     };
 
     return (
@@ -38,6 +65,11 @@ export default function SignupPage() {
                     </div>
 
                     <form onSubmit={handleSignup} className="space-y-4">
+                        {error && (
+                            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-500">
+                                {error}
+                            </div>
+                        )}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1" htmlFor="name">
                                 Full Name
@@ -87,9 +119,10 @@ export default function SignupPage() {
 
                         <button
                             type="submit"
-                            className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 rounded-lg transition-all mt-6"
+                            disabled={isLoading}
+                            className={`w-full bg-slate-800 text-white font-bold py-3.5 rounded-lg transition-all mt-6 ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-700'}`}
                         >
-                            Sign Up
+                            {isLoading ? "Creating Account..." : "Sign Up"}
                         </button>
                     </form>
 
