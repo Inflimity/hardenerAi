@@ -17,6 +17,29 @@ export default function SignupPage() {
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+
+        // Password complexity validation
+        if (password.length < 12) {
+            setError("Password must be at least 12 characters long.");
+            return;
+        }
+        if (!/[A-Z]/.test(password)) {
+            setError("Password must contain at least one uppercase letter.");
+            return;
+        }
+        if (!/[a-z]/.test(password)) {
+            setError("Password must contain at least one lowercase letter.");
+            return;
+        }
+        if (!/[0-9]/.test(password)) {
+            setError("Password must contain at least one number.");
+            return;
+        }
+        if (!/[^A-Za-z0-9]/.test(password)) {
+            setError("Password must contain at least one special character.");
+            return;
+        }
+
         setIsLoading(true);
 
         const { data, error: signUpError } = await supabase.auth.signUp({
@@ -37,8 +60,23 @@ export default function SignupPage() {
             return;
         }
 
-        // Redirect to admin dashboard on success
-        router.push("/admin");
+        // Check role to route appropriately
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("role")
+                .eq("id", user.id)
+                .single();
+
+            if (profile?.role === "admin") {
+                router.push("/admin");
+            } else {
+                router.push("/dashboard");
+            }
+        } else {
+            router.push("/dashboard");
+        }
     };
 
     return (
@@ -112,9 +150,9 @@ export default function SignupPage() {
                                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-600"
                                 placeholder="••••••••"
                                 required
-                                minLength={8}
+                                minLength={12}
                             />
-                            <p className="text-[10px] text-slate-500 pl-1 mt-1">Must be at least 8 characters long.</p>
+                            <p className="text-[10px] text-slate-500 pl-1 mt-1">Must be at least 12 characters with an uppercase letter, number, and special character.</p>
                         </div>
 
                         <button

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 interface ScanCheck {
@@ -141,6 +142,7 @@ function CheckCard({ check, isLocked }: { check: ScanCheck; isLocked: boolean })
 }
 
 export default function Home() {
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [url, setUrl] = useState("");
     const [isScanning, setIsScanning] = useState(false);
@@ -149,19 +151,50 @@ export default function Home() {
     const [scanError, setScanError] = useState<string | null>(null);
     const [scanResult, setScanResult] = useState<ScanResult | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const checkSession = async () => {
             try {
                 const supabase = createClient();
                 const { data: { user } } = await supabase.auth.getUser();
-                setIsLoggedIn(!!user);
+                if (user) {
+                    setIsLoggedIn(true);
+                    const { data: profile } = await supabase
+                        .from("profiles")
+                        .select("role")
+                        .eq("id", user.id)
+                        .single();
+                    
+                    const adminUser = profile?.role === "admin";
+                    setIsAdmin(adminUser);
+
+                    if (adminUser) {
+                        router.push("/admin");
+                    }
+                } else {
+                    setIsLoggedIn(false);
+                    setIsAdmin(false);
+                }
             } catch {
                 setIsLoggedIn(false);
+                setIsAdmin(false);
             }
         };
         checkSession();
-    }, []);
+    }, [router]);
+
+    const handleSignOut = async () => {
+        try {
+            const supabase = createClient();
+            await supabase.auth.signOut();
+            setIsLoggedIn(false);
+            setIsAdmin(false);
+            window.location.reload();
+        } catch {
+            // ignore
+        }
+    };
 
     const handleScan = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -212,6 +245,46 @@ export default function Home() {
             }
 
             setScanProgress(100);
+
+            // Log successfully completed scan to database & increment credit quota
+            if (isLoggedIn) {
+                try {
+                    const supabase = createClient();
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (user) {
+                        const failedCount = data.checks.filter((c: ScanCheck) => c.status === "Failed").length;
+                        
+                        // 1. Get current profile stats to increment scans credit
+                        const { data: profileData } = await supabase
+                            .from("profiles")
+                            .select("monthly_scans_used")
+                            .eq("id", user.id)
+                            .single();
+                            
+                        // 2. Insert scan record
+                        await supabase.from("scans").insert({
+                            user_id: user.id,
+                            target_url: trimmed,
+                            status: "Completed",
+                            progress: 100,
+                            vulns_found: failedCount,
+                            time_taken: "2.5s",
+                            score: data.score,
+                            grade: data.grade
+                        });
+
+                        // 3. Update scans used count
+                        const newScansUsed = (profileData?.monthly_scans_used || 0) + 1;
+                        await supabase
+                            .from("profiles")
+                            .update({ monthly_scans_used: newScansUsed })
+                            .eq("id", user.id);
+                    }
+                } catch {
+                    // silent database log failure
+                }
+            }
+
             setTimeout(() => {
                 setScanResult(data);
                 setIsScanning(false);
@@ -229,6 +302,26 @@ export default function Home() {
             const msg = err instanceof Error ? err.message : "Failed to establish connection to target server.";
             setScanError(msg);
             setIsScanning(false);
+
+            // Log failed scan to database
+            if (isLoggedIn) {
+                try {
+                    const supabase = createClient();
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (user) {
+                        await supabase.from("scans").insert({
+                            user_id: user.id,
+                            target_url: trimmed,
+                            status: "Failed",
+                            progress: 100,
+                            vulns_found: 0,
+                            error_message: msg
+                        });
+                    }
+                } catch {
+                    // silent database log failure
+                }
+            }
         }
     };
 
@@ -271,12 +364,34 @@ export default function Home() {
                             <a href="#security" className="text-slate-400 hover:text-white transition-colors">
                                 Safety Standard
                             </a>
-                            <a href="/login" className="text-slate-400 font-bold hover:text-white transition-colors">
-                                Log In
-                            </a>
-                            <a href="/signup" className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition-all">
-                                Get Started
-                            </a>
+                            {isLoggedIn ? (
+                                <>
+                                    {isAdmin ? (
+                                        <a href="/admin" className="text-slate-400 font-bold hover:text-white transition-colors">
+                                            Admin Dashboard
+                                        </a>
+                                    ) : (
+                                        <a href="/dashboard" className="text-slate-400 font-bold hover:text-white transition-colors">
+                                            My Dashboard
+                                        </a>
+                                    )}
+                                    <button
+                                        onClick={handleSignOut}
+                                        className="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-350 px-4 py-2 rounded-lg font-bold transition-all cursor-pointer"
+                                    >
+                                        Sign Out
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="/login" className="text-slate-400 font-bold hover:text-white transition-colors">
+                                        Log In
+                                    </a>
+                                    <a href="/signup" className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition-all">
+                                        Get Started
+                                    </a>
+                                </>
+                            )}
                         </div>
 
                         <button className="md:hidden text-slate-400" id="menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -305,36 +420,51 @@ export default function Home() {
                     <a href="#how" className="block text-slate-400 hover:text-white transition-colors">
                         How it Works
                     </a>
-                    <a href="/login" className="block text-slate-400 font-bold hover:text-white transition-colors">
-                        Log In
-                    </a>
-                    <a href="/signup" className="w-full bg-emerald-600 text-center block text-white py-2 rounded-lg font-semibold">
-                        Get Started
-                    </a>
+                    {isLoggedIn ? (
+                        <>
+                            {isAdmin ? (
+                                <a href="/admin" className="block text-slate-400 font-bold hover:text-white transition-colors">
+                                    Admin Dashboard
+                                </a>
+                            ) : (
+                                <a href="/dashboard" className="block text-slate-400 font-bold hover:text-white transition-colors">
+                                    My Dashboard
+                                </a>
+                            )}
+                            <button
+                                onClick={handleSignOut}
+                                className="w-full bg-slate-900 text-center block text-slate-300 py-2 rounded-lg font-semibold border border-slate-800 cursor-pointer"
+                            >
+                                Sign Out
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <a href="/login" className="block text-slate-400 font-bold hover:text-white transition-colors">
+                                Log In
+                            </a>
+                            <a href="/signup" className="w-full bg-emerald-600 text-center block text-white py-2 rounded-lg font-semibold">
+                                Get Started
+                            </a>
+                        </>
+                    )}
                 </div>
             </nav>
 
             {/* Hero Section */}
-            <section className="pt-40 pb-24 px-4">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-slate-900 border border-slate-800 mb-8">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-                            Trusted by Global Developers
-                        </span>
-                    </div>
-
-                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
-                        Modern App Development<br />
-                        <span className="text-emerald-500">Requires Modern Security.</span>
+            <section className="pt-32 pb-16 px-4">
+                <div className="max-w-4xl mx-auto text-center space-y-6">
+                    <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
+                        Harden Your App Security <br />
+                        <span className="text-emerald-500">In 10 Seconds.</span>
                     </h1>
 
-                    <p className="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-                        Clean architecture for the modern era. We use advanced static analysis and dynamic profiling to audit, verify, and harden your codebase against production-grade threats.
+                    <p className="text-sm sm:text-md text-slate-400 max-w-xl mx-auto leading-relaxed">
+                        Audit web security headers and SSL diagnostics instantly. Retrieve automated remediation profiles to secure your production environments against vulnerabilities.
                     </p>
 
                     {/* Scanner Input Area */}
-                    <div className="max-w-2xl mx-auto">
+                    <div className="max-w-2xl mx-auto pt-2">
                         <div className="p-1 bg-slate-900 rounded-xl border border-slate-800 shadow-xl">
                             <form id="scan-form" className="flex flex-col sm:flex-row gap-1" onSubmit={handleScan}>
                                 <div className="relative flex-grow">

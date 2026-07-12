@@ -49,12 +49,10 @@ CREATE TABLE public.scans (
     vulns_found INTEGER DEFAULT 0,
     time_taken TEXT,
     error_message TEXT,
-    created_at TIMESTAMP
-    WITH
-        TIME ZONE DEFAULT NOW(),
-        updated_at TIMESTAMP
-    WITH
-        TIME ZONE DEFAULT NOW()
+    score INTEGER,
+    grade TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 ALTER TABLE public.scans ENABLE ROW LEVEL SECURITY;
@@ -81,8 +79,22 @@ CREATE TABLE public.billing_events (
     WITH
         TIME ZONE DEFAULT NOW()
 );
--- No public RLS policies because this is backend-only (managed via Admin actions/webhooks)
+
+-- Helper function to check if the current user is an admin
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN SECURITY DEFINER AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql;
+
 ALTER TABLE public.billing_events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can view billing events" ON public.billing_events
+FOR SELECT USING (public.is_admin());
 
 -- 4. Admin Audit Logs (Tracks who did what)
 CREATE TABLE public.admin_audit_logs (
@@ -91,12 +103,16 @@ CREATE TABLE public.admin_audit_logs (
     action TEXT NOT NULL,
     target_user_id UUID REFERENCES public.profiles (id),
     details JSONB,
-    created_at TIMESTAMP
-    WITH
-        TIME ZONE DEFAULT NOW()
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
--- No public RLS policies because this is backend-only
+
 ALTER TABLE public.admin_audit_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can view audit logs" ON public.admin_audit_logs
+FOR SELECT USING (public.is_admin());
+
+CREATE POLICY "Admins can insert audit logs" ON public.admin_audit_logs
+FOR INSERT WITH CHECK (public.is_admin());
 
 -- 5. Admin Scans View (Joins scan with user info for global feed)
 CREATE OR REPLACE VIEW public.admin_scans_view AS
@@ -108,6 +124,8 @@ SELECT
     s.vulns_found,
     s.time_taken,
     s.error_message,
+    s.score,
+    s.grade,
     s.created_at,
     p.id AS user_id,
     p.full_name AS user_name,

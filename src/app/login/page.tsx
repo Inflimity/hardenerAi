@@ -29,7 +29,23 @@ export default function LoginPage() {
             return;
         }
 
-        router.push("/admin");
+        // Check role to route appropriately
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("role")
+                .eq("id", user.id)
+                .single();
+
+            if (profile?.role === "admin") {
+                router.push("/admin");
+            } else {
+                router.push("/dashboard");
+            }
+        } else {
+            router.push("/dashboard");
+        }
     };
 
     return (
