@@ -13,7 +13,7 @@ const initialUsers = [
 
 export default function AdminUsersList() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState(initialUsers);
+    const [users] = useState(initialUsers);
 
     const filteredUsers = users.filter(user =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,7 +134,7 @@ export default function AdminUsersList() {
                                     <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
                                         <div className="flex flex-col items-center justify-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-3 text-slate-700"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-                                            No users found matching "{searchTerm}"
+                                            No users found matching &quot;{searchTerm}&quot;
                                         </div>
                                     </td>
                                 </tr>

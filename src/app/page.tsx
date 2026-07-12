@@ -1,42 +1,236 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
+
+interface ScanCheck {
+    name: string;
+    status: 'Passed' | 'Failed';
+    value: string;
+    description: string;
+    severity: 'high' | 'medium' | 'low';
+    remediation: string;
+}
+
+interface ScanResult {
+    url: string;
+    score: number;
+    grade: string;
+    server: string;
+    poweredBy: string;
+    checks: ScanCheck[];
+    scannedAt: string;
+}
+
+function CheckCard({ check, isLocked }: { check: ScanCheck; isLocked: boolean }) {
+    const [isOpen, setIsOpen] = useState(check.status === 'Failed' && !isLocked);
+
+    return (
+        <div className={`border rounded-xl transition-all ${
+            check.status === 'Passed'
+                ? 'bg-slate-900/45 border-slate-800/60'
+                : 'bg-red-500/[0.02] border-red-500/15'
+        }`}>
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between p-4 font-sans text-left focus:outline-none rounded-xl"
+            >
+                <div className="flex items-center gap-3 min-w-0">
+                    {check.status === 'Passed' ? (
+                        <div className="w-6 h-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                    ) : (
+                        <div className="w-6 h-6 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </div>
+                    )}
+                    <div className="truncate flex-grow">
+                        <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-white">{check.name}</span>
+                            {check.status === 'Failed' && (
+                                <span className={`text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
+                                    check.severity === 'high' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                                    check.severity === 'medium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                    'bg-slate-800 text-slate-400 border-slate-700'
+                                }`}>
+                                    {check.severity}
+                                </span>
+                            )}
+                            {isLocked && (
+                                <span className="text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    Locked
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5 font-mono truncate max-w-[200px] sm:max-w-md">{check.value}</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3 text-slate-500 shrink-0 ml-2">
+                    <span className="text-xs hover:text-slate-300 font-medium hidden sm:inline">
+                        {isLocked ? "Unlock Fix" : isOpen ? "Hide Fix" : "Show Fix"}
+                    </span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    >
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                </div>
+            </button>
+
+            {isOpen && (
+                <div className="px-4 pb-5 border-t border-slate-800/40 pt-4 text-sm text-slate-400 leading-relaxed font-sans animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="text-xs text-slate-450 mb-3">{check.description}</p>
+                    
+                    {isLocked ? (
+                        <div className="mt-4 p-6 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col items-center text-center relative overflow-hidden">
+                            <div className="absolute inset-0 opacity-[0.03] filter blur-[2px] select-none pointer-events-none font-mono text-[7px] text-left p-4 leading-normal">
+                                {`// production config patches\nconst securityHeaders = {\n  ContentSecurityPolicy: "default-src 'self'",\n  StrictTransportSecurity: "max-age=63072000; preload",\n  XFrameOptions: "DENY",\n  XContentTypeOptions: "nosniff"\n};`}
+                            </div>
+                            <div className="relative z-10 space-y-3 max-w-sm">
+                                <div className="w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </div>
+                                <h4 className="font-bold text-white text-sm font-mono">Remediation Patch Locked</h4>
+                                <p className="text-xs text-slate-400 leading-relaxed">
+                                    Free account registration is required to unlock full config templates and automated patch tools.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
+                                    <Link href="/signup" className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-emerald-500/10">
+                                        Create Free Account
+                                    </Link>
+                                    <Link href="/login" className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg text-xs font-bold transition-all">
+                                        Sign In
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-xs text-slate-300 relative group">
+                            <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(check.remediation);
+                                        alert("Remediation code copied to clipboard!");
+                                    }}
+                                    className="p-1.5 bg-slate-900 border border-slate-800 text-slate-450 hover:text-white rounded"
+                                    title="Copy snippet"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                </button>
+                            </div>
+                            <div className="text-[10px] text-slate-650 uppercase tracking-wider mb-2 font-bold select-none">Remediation Snippet</div>
+                            <pre className="overflow-x-auto select-all whitespace-pre-wrap">{check.remediation}</pre>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function Home() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [url, setUrl] = useState("");
     const [isScanning, setIsScanning] = useState(false);
     const [scanProgress, setScanProgress] = useState(0);
+    const [scanStatus, setScanStatus] = useState("");
+    const [scanError, setScanError] = useState<string | null>(null);
+    const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const handleScan = (e: React.FormEvent) => {
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const supabase = createClient();
+                const { data: { user } } = await supabase.auth.getUser();
+                setIsLoggedIn(!!user);
+            } catch {
+                setIsLoggedIn(false);
+            }
+        };
+        checkSession();
+    }, []);
+
+    const handleScan = async (e: React.FormEvent) => {
         e.preventDefault();
         const trimmed = url.trim();
         if (!trimmed) return;
 
         setIsScanning(true);
-        setScanProgress(0);
-    };
+        setScanProgress(5);
+        setScanStatus("Resolving hostname...");
+        setScanError(null);
+        setScanResult(null);
 
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-        if (isScanning && scanProgress < 100) {
-            interval = setInterval(() => {
-                setScanProgress((prev) => {
-                    const next = prev + Math.floor(Math.random() * 3) + 1;
-                    if (next >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            setIsScanning(false);
-                            alert(`Surface scan complete for ${url}. 3 potential vulnerabilities found.`);
-                        }, 800);
-                        return 100;
+        const progressInterval = setInterval(() => {
+            setScanProgress((prev) => {
+                if (prev >= 85) return prev;
+                return prev + Math.floor(Math.random() * 8) + 2;
+            });
+        }, 300);
+
+        const statuses = [
+            "Resolving hostname and verification checks...",
+            "Applying SSRF protection filters...",
+            "Initiating secure handshake...",
+            "Reading response headers...",
+            "Analyzing Content-Security-Policy rules...",
+            "Evaluating TLS & Strict-Transport-Security...",
+            "Checking clickjacking guards...",
+            "Compiling safety score..."
+        ];
+
+        let statusIndex = 0;
+        const statusInterval = setInterval(() => {
+            if (statusIndex < statuses.length - 1) {
+                statusIndex++;
+                setScanStatus(statuses[statusIndex]);
+            }
+        }, 700);
+
+        try {
+            const res = await fetch(`/api/scan?url=${encodeURIComponent(trimmed)}`);
+            const data = await res.json();
+
+            clearInterval(progressInterval);
+            clearInterval(statusInterval);
+
+            if (!res.ok) {
+                throw new Error(data.error || "An unexpected error occurred during the security scan.");
+            }
+
+            setScanProgress(100);
+            setTimeout(() => {
+                setScanResult(data);
+                setIsScanning(false);
+                setTimeout(() => {
+                    const target = document.getElementById("scan-report-results");
+                    if (target) {
+                        target.scrollIntoView({ behavior: "smooth" });
                     }
-                    return next;
-                });
-            }, 40);
+                }, 100);
+            }, 500);
+
+        } catch (err) {
+            clearInterval(progressInterval);
+            clearInterval(statusInterval);
+            const msg = err instanceof Error ? err.message : "Failed to establish connection to target server.";
+            setScanError(msg);
+            setIsScanning(false);
         }
-        return () => clearInterval(interval);
-    }, [isScanning, url, scanProgress]);
+    };
 
     return (
         <>
@@ -201,9 +395,9 @@ export default function Home() {
 
                         {/* Scan Progress Bar */}
                         <div id="progress-container" className={`mt-8 animate-in fade-in ${isScanning ? "block" : "hidden"}`}>
-                            <div className="flex justify-between text-[10px] text-slate-500 mb-2 font-mono uppercase tracking-widest">
-                                <span>Analyzing Stack</span>
-                                <span id="progress-text">{scanProgress}%</span>
+                            <div className="flex justify-between text-[10px] text-slate-500 mb-2 font-mono uppercase tracking-widest gap-4">
+                                <span className="truncate">{scanStatus || "Analyzing Stack"}</span>
+                                <span id="progress-text" className="shrink-0">{scanProgress}%</span>
                             </div>
                             <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
                                 <div
@@ -213,6 +407,121 @@ export default function Home() {
                                 ></div>
                             </div>
                         </div>
+
+                        {/* Scan Error Message */}
+                        {scanError && (
+                            <div className="mt-8 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-left text-sm text-rose-450 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                                <div>
+                                    <h4 className="font-bold text-rose-300">Scan Execution Error</h4>
+                                    <p className="mt-1 text-slate-400 leading-relaxed text-xs">{scanError}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Scan Results Report */}
+                        {scanResult && (
+                            <div id="scan-report-results" className="mt-12 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl text-left animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                {/* Report Header */}
+                                <div className="p-6 md:p-8 border-b border-slate-800/80 bg-slate-950/40 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                                    <div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Pulse Check</span>
+                                            <span className="text-xs text-slate-500 font-mono">Status: Completed</span>
+                                        </div>
+                                        <h2 className="text-lg font-bold text-white mt-2 font-mono truncate max-w-[280px] sm:max-w-md">{scanResult.url}</h2>
+                                        <p className="text-xs text-slate-500 mt-1 font-mono">Scanned at {new Date(scanResult.scannedAt).toLocaleString()}</p>
+                                    </div>
+                                    <div className="flex flex-col sm:items-end gap-1.5 shrink-0">
+                                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                                            <span className="text-[10px] text-slate-500 uppercase font-mono">Server:</span>
+                                            <span className="font-semibold text-slate-350">{scanResult.server}</span>
+                                        </div>
+                                        {scanResult.poweredBy !== 'Undetected' && (
+                                            <div className="flex items-center gap-2 text-xs text-slate-400">
+                                                <span className="text-[10px] text-slate-500 uppercase font-mono">Stack:</span>
+                                                <span className="font-semibold text-slate-350">{scanResult.poweredBy}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Report Metrics Summary */}
+                                <div className="p-6 md:p-8 border-b border-slate-800/80 bg-slate-950/20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    {/* Radial Score Gauge */}
+                                    <div className="flex flex-col items-center justify-center py-4 border-b md:border-b-0 md:border-r border-slate-800/80">
+                                        <div className="relative">
+                                            <svg className="w-36 h-36" viewBox="0 0 224 224">
+                                                <circle cx="112" cy="112" r="100" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-800" />
+                                                <circle cx="112" cy="112" r="100" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray="628.3" strokeDashoffset={628.3 - (628.3 * scanResult.score) / 100} className={`progress-ring__circle transition-all duration-1000 ${
+                                                    scanResult.score >= 80 ? 'text-emerald-500' :
+                                                    scanResult.score >= 50 ? 'text-amber-500' : 'text-rose-500'
+                                                }`} strokeLinecap="round" />
+                                            </svg>
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                                <span className="text-4xl font-bold text-white tracking-tighter">{scanResult.score}</span>
+                                                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-1">Safety Index</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Grade Display */}
+                                    <div className="flex flex-col items-center justify-center py-4 border-b md:border-b-0 md:border-r border-slate-800/80">
+                                        <span className="text-[10px] text-slate-500 font-mono uppercase tracking-widest mb-2">Security Grade</span>
+                                        <div className={`text-6xl font-black font-sans leading-none ${
+                                            scanResult.grade.startsWith('A') ? 'text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.2)]' :
+                                            scanResult.grade.startsWith('B') || scanResult.grade.startsWith('C') ? 'text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.2)]' :
+                                            'text-rose-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+                                        }`}>
+                                            {scanResult.grade}
+                                        </div>
+                                        <span className="text-xs text-slate-400 mt-3 font-medium">
+                                            {scanResult.score >= 80 ? 'Strong Protection Standards' :
+                                             scanResult.score >= 50 ? 'Intermediate Security Gaps' :
+                                             'Action Required: Vulnerable Stack'}
+                                        </span>
+                                    </div>
+
+                                    {/* Remediation Action */}
+                                    <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left py-4">
+                                        <h3 className="text-md font-bold text-white mb-2 font-mono">Harden Stack</h3>
+                                        <p className="text-xs text-slate-400 leading-relaxed mb-5 max-w-[240px]">
+                                            Inject security headers into your runtime architecture configuration to mitigate logical attacks.
+                                        </p>
+                                        <Link href="/docs" className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all w-full md:w-auto justify-center shadow-lg shadow-emerald-500/10">
+                                            <span>Read Hardening Guides</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Header Check Details */}
+                                <div className="p-6 md:p-8 space-y-4 bg-slate-950/20">
+                                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-mono">Audited HTTP Security Headers</h3>
+                                    <div className="space-y-3">
+                                        {(() => {
+                                            let failedCount = 0;
+                                            return scanResult.checks.map((check: ScanCheck, idx: number) => {
+                                                let isLocked = false;
+                                                if (check.status === 'Failed') {
+                                                    failedCount++;
+                                                    if (failedCount > 2 && !isLoggedIn) {
+                                                        isLocked = true;
+                                                    }
+                                                }
+                                                return (
+                                                    <CheckCard
+                                                        key={idx}
+                                                        check={check}
+                                                        isLocked={isLocked}
+                                                    />
+                                                );
+                                            });
+                                        })()}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <p className="mt-6 text-xs text-slate-500 italic">
                             Non-invasive surface audit. No login required for initial scan.

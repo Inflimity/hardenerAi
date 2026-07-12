@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -107,7 +107,7 @@ export default function LoginPage() {
 
                     <div className="mt-8 text-center border-t border-slate-800/50 pt-6">
                         <p className="text-sm text-slate-400">
-                            Don't have an account yet?{" "}
+                            Don&apos;t have an account yet?{" "}
                             <Link href="/signup" className="text-emerald-500 font-bold hover:text-emerald-400 transition-colors">
                                 Create an account
                             </Link>
