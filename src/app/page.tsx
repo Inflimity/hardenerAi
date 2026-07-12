@@ -331,28 +331,16 @@ export default function Home() {
             <nav className="fixed top-0 w-full z-50 bg-[#020617] border-b border-slate-800">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16 items-center">
-                        <div className="flex items-center gap-2">
-                            <div className="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20 text-emerald-500">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="lucide lucide-shield-check"
-                                >
-                                    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z" />
-                                    <path d="m9 12 2 2 4-4" />
-                                </svg>
-                            </div>
+                        <Link href="/" className="flex items-center gap-2">
+                            <img
+                                src="/logo.png"
+                                alt="HardenerPlus Logo"
+                                className="w-8 h-8 rounded-lg object-contain border border-slate-800"
+                            />
                             <span className="text-xl font-bold tracking-tight text-white">
                                 Hardener<span className="text-emerald-500">Plus</span>
                             </span>
-                        </div>
+                        </Link>
 
                         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
                             <a href="#how" className="text-slate-400 hover:text-white transition-colors">
@@ -635,7 +623,7 @@ export default function Home() {
                                                 let isLocked = false;
                                                 if (check.status === 'Failed') {
                                                     failedCount++;
-                                                    if (failedCount > 2 && !isLoggedIn) {
+                                                    if (failedCount > 2) {
                                                         isLocked = true;
                                                     }
                                                 }

@@ -88,12 +88,11 @@ export default function SignupPage() {
                 <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="text-center mb-8">
                         <Link href="/" className="inline-flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity">
-                            <div className="bg-emerald-500/10 p-1.5 rounded-lg border border-emerald-500/20 text-emerald-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z" />
-                                    <path d="m9 12 2 2 4-4" />
-                                </svg>
-                            </div>
+                            <img
+                                src="/logo.png"
+                                alt="HardenerPlus Logo"
+                                className="w-6 h-6 rounded-md object-contain border border-slate-800"
+                            />
                             <span className="text-xl font-bold tracking-tight text-white">
                                 Hardener<span className="text-emerald-500">Plus</span>
                             </span>
